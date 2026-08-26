@@ -6,9 +6,10 @@ OMP-native orchestration and pstack adapters for the [`omp`](https://omp.sh/) co
 
 | Skill | Purpose |
 |---|---|
-| `poteto-mode` | Routes substantial work to the matching pstack playbook. This OMP port uses stable `skill://poteto-mode/...` links. |
+| `poteto-mode` | Routes substantial work to the matching pstack playbook. Nested links name their owning skill explicitly. |
 | `pstack-omp` | Maps pstack roles and lifecycle protocols to OMP task agents, batches, IRC, and result resources. |
 | `orchestrate-omp` | Coordinates parallel scouts, scoped workers, specialist reviews, and root-owned verification. |
+| `writing-for-agents` | Defines the OMP discovery and prose contract for agent-facing skills. |
 
 The repository also includes optional `poteto-agent` and `comment-sicko` definitions under `agents/`.
 
@@ -20,26 +21,34 @@ The repository also includes optional `poteto-agent` and `comment-sicko` definit
 
 ## Install the skills
 
-Install all three skills globally with the [`skills`](https://skills.sh/) CLI:
+Install all four skills globally with the [`skills`](https://skills.sh/) CLI:
 
 ```bash
 npx skills add dsebban/skills \
-  --skill poteto-mode pstack-omp orchestrate-omp \
+  --skill poteto-mode pstack-omp orchestrate-omp writing-for-agents \
   --global --yes
 ```
 
-Allow OMP to discover shared agent skills in `~/.omp/agent/config.yml`:
+Merge only these `skills` keys into `~/.omp/agent/config.yml`. Keep model, provider, `modelRoles`, `task.agentModelOverrides`, and unrelated settings unchanged.
 
 ```yaml
 skills:
   enableAgentsUser: true
-  includeSkills:
-    - poteto-mode
-    - pstack-omp
-    - orchestrate-omp
+  ignoredSkills:
+    - Poteto Mode
 ```
 
-Start a new OMP process after changing the allowlist. Existing sessions retain their previous skill inventory.
+Start a new OMP process after changing the skill settings. Existing sessions retain their previous skill inventory.
+
+## Audit skill references
+
+Run the offline audit from a repository checkout:
+
+```bash
+python3 scripts/audit_skill_references.py
+```
+
+The audit checks exact skill URIs and bold lowercase named dependencies against the repository and the installed user skill roots. A nested external URI fails as ambiguous when multiple installed skills declare the same name.
 
 ## Install the optional agents
 
@@ -63,6 +72,7 @@ OMP resolves the skills by these exact names:
 skill://poteto-mode
 skill://pstack-omp
 skill://orchestrate-omp
+skill://writing-for-agents
 ```
 
 Nested pstack files use the owning skill URI:
@@ -72,7 +82,7 @@ skill://poteto-mode/playbooks/babysit.md
 skill://poteto-mode/references/plan.md
 ```
 
-Do not use `skill://playbooks/...` or the display label `Poteto Mode`. OMP resolves skill names exactly and case-sensitively.
+Nested references must include the exact owning skill name. Display labels and path-only roots do not resolve.
 
 ## OMP task behavior
 
