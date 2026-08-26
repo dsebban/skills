@@ -26,8 +26,10 @@ Install all four skills globally with the [`skills`](https://skills.sh/) CLI:
 ```bash
 npx skills add dsebban/skills \
   --skill poteto-mode pstack-omp orchestrate-omp writing-for-agents \
-  --global --yes
+  --agent codex --global --yes
 ```
+
+The agent scope writes the universal copy that OMP loads without replacing Claude Code's upstream pstack installation.
 
 Merge only these `skills` keys into `~/.omp/agent/config.yml`. Keep model, provider, `modelRoles`, `task.agentModelOverrides`, and unrelated settings unchanged.
 
