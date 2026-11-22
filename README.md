@@ -16,6 +16,7 @@ relative paths, `agent://` and `history://` instead of cloud-agent URLs.
 | Understanding | `how`, `why`, `interrogate`, `blast-radius`, `recall`, `ketchup`, `in-your-own-words`, `teach` |
 | Design and exploration | `architect`, `arena`, `swarm`, `figure-it-out`, `sharpen`, `reflect` |
 | Execution | `tdd`, `correct`, `bro`, `show-me-your-work`, `benchmark-checklist`, `automate-me` |
+| Repository safety | `purge-git-history` covers authorized removal of sensitive content from Git history and hosted copies. |
 | Writing | `unslop`, `technical-writing`, `no-comments` |
 | Verification | `create-verification-skill`, `maintain-verification-skill`, `create-formal-verification-skill`, `maintain-formal-verification-skill` |
 | Review | `fable-deslop` shrinks an oversized patch with the RepoPrompt CE context builder and its Oracle lanes |
