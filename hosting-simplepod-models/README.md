@@ -35,10 +35,12 @@ Tested end to end on one model (Inkling-2-Mini-Uncensored, Strata 0.2.21):
 - Picking a host, renting an RTX 3090 and then an A100, downloading and checksumming the GGUF, serving with Strata, the router patch, `vram-experts-gb`, Tailscale Funnel HTTPS (including moving the name to a new pod), the Amp Custom URL connection, real Amp threads (257 of 260 requests finished normally), the health report, and deleting an instance.
 - `scripts/sp.sh` (summary, status, endpoint, ssh), `pod-patch-strata-router.sh`, and `pod-strata-report.sh` ran against the live instance as written.
 
+- A final dry run of the published files on a fresh A100: `sp.sh create` from a template made from `simplepod-start-script.sh` (running in about 30 s, GGUF downloaded and checksum-verified in about 1 min), `pod-patch-strata-router.sh`, `pod-strata-launch.sh`, `mint-tailscale-key.sh`, `pod-funnel.sh` (same HTTPS name came back), and `pod-strata-report.sh`. Over HTTPS: a valid certificate, 401 without the key, `/v1/models`, a chat request, a tool call, SSE streaming ending in `[DONE]`, and a second turn reusing 19,034 of 19,049 prompt tokens from the cache after an unrelated request in between.
+
 Not tested as packaged here:
 
-- `sp.sh create`/`delete`, `simplepod-start-script.sh`, `pod-strata-launch.sh`, `mint-tailscale-key.sh`, and `pod-funnel.sh` were cleaned up from the commands that were run, but have not been rerun in this form. The start script downloads to `/root/strata-data/models/hf/` (the run used a different folder) and takes the model from a `MODEL_URL` env var.
-- The configurable Tailscale tag (`TS_TAG`, default `tag:simplepod-model`); the run used a different tag name.
+- `sp.sh delete` in this form (instances were deleted during the run, but not with this script).
+- The default Tailscale tag `tag:simplepod-model`: the dry run passed an existing tag through `TS_TAG`. Create the tag with the funnel attribute first, as the skill describes.
 - Any model other than Inkling-2-Mini, and llama.cpp beyond the first attempt.
 - The router patch matches Strata 0.2.21's `server.py` exactly; on another version the script stops and says so.
 
