@@ -13,11 +13,11 @@ for r in sorted(d["requests"], key=lambda r: r["time"]):
           "reused", r.get("reused") or 0, "ttft_s", r.get("first_engine_token_s"), "out", r["output_tokens"],
           "decode_tok_s", r.get("decode_tok_s"), "total_s", r["duration_s"])
 print("slots", [(s["slot"], s["state"], s.get("held_tokens")) for s in d["live"]["slots"]])'
-L=$(ls /root/.local/state/strata/runtime/*.server.log | head -1)
+L=$(ls -t /root/.local/state/strata/runtime/*.server.log | head -1)
 n=$(grep -n "^ready:" "$L" | tail -1 | cut -d: -f1)
 echo "finishes since last start:"; tail -n +"${n:-1}" "$L" | grep -oE "\((stop|length|cancel|error)[^)]*\)" | sort | uniq -c
 echo "warnings and cancels (with the prompt size before each):"
 tail -n +"${n:-1}" "$L" | grep -B1 -iE "warn|error|fail|cancel=True|side request" | cut -c1-160 | tail -20
-grep -E "experts=" /root/.local/state/strata/launch/*.engine.log | tail -1 | grep -oE "experts=[^(]*"
+grep -hE "experts=" $(ls -t /root/.local/state/strata/launch/*.engine.log | head -1) | tail -1 | grep -oE "experts=[^(]*"
 nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv,noheader
 [ -f /root/tailscaled.log ] && echo "funnel proxy errors: $(grep -c 'proxy error' /root/tailscaled.log)"
