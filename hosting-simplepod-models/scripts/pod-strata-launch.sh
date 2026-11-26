@@ -2,12 +2,12 @@
 # Runs on the pod: sp.sh ssh <id> 'bash -s -- [strata launch args]' < this
 # Fully stops Strata (a plain --restart with unchanged settings keeps the old server process), then starts it on the
 # newest downloaded GGUF with the key from the container's STRATA_API_KEY. Default args are for Inkling on an A100 40 GB:
-#   --family inkling-2-mini --context 128k --parallel 2 --set vram-experts-gb=16 --vision off --tune skip
+#   --family inkling-2-mini --context 64k --parallel 2 --set vram-experts-gb=16 --vision off --tune skip
 # Drops in-flight requests: get the user's approval while they are using the model.
 set -uo pipefail
 export PATH=/root/.local/bin:$PATH
 F=$(ls -t /root/strata-data/models/*/*.gguf | head -1)
-ARGS=${*:---family inkling-2-mini --context 128k --parallel 2 --set vram-experts-gb=16 --vision off --tune skip}
+ARGS=${*:---family inkling-2-mini --context 64k --parallel 2 --set vram-experts-gb=16 --vision off --tune skip}
 export STRATA_API_KEY="$(tr '\0' '\n' < /proc/1/environ | sed -n 's/^STRATA_API_KEY=//p')"
 [ -n "$STRATA_API_KEY" ] || { echo "STRATA_API_KEY is not in the container environment" >&2; exit 2; }
 strata launch --stop >/dev/null 2>&1; sleep 5

@@ -17,7 +17,7 @@ D=/root/strata-data/models/hf; N=$(basename "${MODEL_URL%%\?*}"); F=$D/$N
 [ -e "$F.done" ] || { aria2c -c -x 16 -s 16 -k 64M --file-allocation=none --summary-interval=60 -d "$D" -o "$N" "$MODEL_URL" && touch "$F.done"; }
 ls -la "$F"
 strata launch --model-path "$F" --family "${STRATA_FAMILY:-inkling-2-mini}" \
-  ${STRATA_ARGS:---context 128k --parallel 1 --vision off --tune skip} \
+  ${STRATA_ARGS:---context 64k --parallel 1 --vision off --tune skip} \
   --access lan --port 8080 --api-key-env STRATA_API_KEY --data-dir /root/strata-data --yes --no-tui
 echo "launch exit $?"
 sleep infinity
