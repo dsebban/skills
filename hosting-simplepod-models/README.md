@@ -28,6 +28,36 @@ SimplePod prices from November 2026, per hour, plus about $0.017/h for an 80 GB 
 
 Billing runs until the instance is deleted; Docker instances cannot be paused.
 
+## Benchmarks
+
+Measured with Inkling-2-Mini-Uncensored (Q4_K GGUF, 16.5 GB) on Strata 0.2.21, through Tailscale Funnel, during real Amp use in November 2026. One model, one run, not a lab benchmark.
+
+| | RTX 3090 24 GB | A100 40 GB |
+|---|---|---|
+| Price incl. 80 GB disk | $0.177/h | $0.437/h |
+| Experts on the GPU | 2,563 of 3,072 (rest in host RAM) | 3,072 of 3,072 |
+| Cold prompt reading | ~290 tok/s | ~300–310 tok/s |
+| Writing (decode), short context | 54–72 tok/s | 67 tok/s |
+| Writing at 48–60k context | – | 47–53 tok/s |
+| Writing at 102k context | – | 41 tok/s |
+| Two slots | stalled at 0 tok/s | works, with the router patch |
+
+Cold prompt reads on the A100, by prompt size (time to first token):
+
+| Prompt tokens | Time |
+|---|---|
+| 19,032 | 62 s |
+| 49,375–51,383 | 160 s |
+| 54,430 | 180 s |
+| 57,361–57,444 | 190 s |
+| 101,756 | over 300 s; Amp cancelled it twice |
+
+Cached turns, where the server still holds the thread: time to first token 0.16 s at 19k tokens and 0.3–1.8 s at 55–60k tokens (median about 0.6 s). Without the router patch, one side request in between evicted the thread and the next turn took 61.7 s instead of 0.59 s.
+
+Compaction: with Input Tokens 65536, Amp compacted a long thread at about 57–60k tokens. The compaction request took 250 s (191 s to read 57,444 tokens, then 2,999 summary tokens), and the first turn after it was another cold read of about 160 s.
+
+Other: Tailscale Funnel added about 0.28 s per request. 257 of 260 requests in one working session finished normally. Strata's model card reports 4,000–11,000 tok/s prompt reading on RTX 50-series cards; that was not measured here.
+
 ## What was tested
 
 Tested end to end on one model (Inkling-2-Mini-Uncensored, Strata 0.2.21):

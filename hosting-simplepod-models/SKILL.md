@@ -14,7 +14,7 @@ mcpServers:
 
 The end state is: one SimplePod Docker GPU instance serves the model with an API key, `https://<hostname>.<tailnet>.ts.net/v1` reaches it over a publicly trusted certificate, an Amp Custom URL connection maps a model ID to it, and a real Amp thread on that model completes a prompt. Report the GPU, its hourly price (GPU plus disk), and how to stop it.
 
-`reference/inkling-2-mini-run.md` is a worked example (Inkling-2-Mini-Uncensored, November 2026) with every number and failure. Read it when hosting an Inkling model or when a step below fails.
+`README.md` (Benchmarks) has the measured speeds and costs by GPU and prompt size. `reference/inkling-2-mini-run.md` is a worked example (Inkling-2-Mini-Uncensored, November 2026) with every number and failure. Read it when hosting an Inkling model or when a step below fails.
 
 ## Approvals and secrets
 
