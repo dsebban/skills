@@ -27,6 +27,11 @@ relative paths, `agent://` and `history://` instead of cloud-agent URLs.
 `agents/` holds two optional subagent definitions, `poteto-agent` and `comment-sicko`, for imported
 workflows that call those names directly.
 
+
+## Standalone skills
+
+- [`hosting-simplepod-models`](hosting-simplepod-models/): rent a SimplePod GPU, serve an open-weight GGUF model with Strata, expose it over Tailscale Funnel HTTPS, and pick it as a model in Amp. Install with `amp skill add --global dsebban/skills/hosting-simplepod-models`.
+
 ## Requirements
 
 - OMP 18.10.4 or newer.
